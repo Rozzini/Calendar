@@ -11,6 +11,7 @@ namespace calendar
     {
         public CalendarContext(DbContextOptions<CalendarContext> options) : base(options)
         {
+            Database.EnsureCreated();
         }
         public DbSet<ProjectCard> ProjectCards { get; set; }
        

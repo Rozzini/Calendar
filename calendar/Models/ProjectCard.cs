@@ -30,5 +30,7 @@ namespace calendar.Models
         public string Twitter { get; set; }
 
         public string Inst { get; set; }
+
+        public bool Promoted { get; set; }
     }
 }
