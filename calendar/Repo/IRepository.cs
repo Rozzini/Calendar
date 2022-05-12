@@ -6,7 +6,7 @@ using calendar.Models;
 
 namespace calendar.Repo
 {
-    interface IRepository
+    public interface IRepository
     {
         Task<IEnumerable<ProjectCard>> GetProjectCards();
 
@@ -14,10 +14,28 @@ namespace calendar.Repo
 
         IEnumerable<ProjectCard> GetNonPromotedProjects();
 
+        IEnumerable<ProjectCard> GetListedProjects();
+
+        IEnumerable<ProjectCard> GetUpcomingProjects();
+
+       void SetListed(int projectID);
+
+        void RemoveListed(int projectID);
+
+        void SetPromoted(int projectID);
+
+        void RemovePromoted(int projectID);
+
         Task<ProjectCard> GetProjectByID(int projectID);
 
         Task<ProjectCard> AddProject(ProjectCard projectCard);
 
-        void DeleteProject(int projectID);
+        void UpdateProject(ProjectCard projectCard, int projectID);
+
+        Task DeleteProject(int projectID);
+
+        void AddUser(User user);
+
+        Task DeleteUser(int userID);
     }
 }

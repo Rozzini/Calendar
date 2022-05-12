@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,9 +8,8 @@ namespace calendar.Models
 {
     public class ProjectCard
     {
+        [Key]
         public int ID { get; set; }
-
-        public DateTime Date { get; set; }
 
         public string Name { get; set; }
 
@@ -31,6 +31,10 @@ namespace calendar.Models
 
         public string Inst { get; set; }
 
+        public bool Listed { get; set; }
+
         public bool Promoted { get; set; }
+
+        public virtual User User { get; set; }
     }
 }

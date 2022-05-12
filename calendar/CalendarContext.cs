@@ -14,6 +14,16 @@ namespace calendar
             Database.EnsureCreated();
         }
         public DbSet<ProjectCard> ProjectCards { get; set; }
-       
+
+        public DbSet<User> Users { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb; Database=Calendar; Integrated Security=true; MultipleActiveResultSets=true; Trusted_Connection=True");
+            }
+        }
+
     }
 }

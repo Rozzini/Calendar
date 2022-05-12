@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using calendar;
 using calendar.Models;
+using calendar.Repo;
 
 namespace calendar.Controllers
 {
@@ -14,64 +15,25 @@ namespace calendar.Controllers
     [ApiController]
     public class ProjectCardsController : ControllerBase
     {
-        private readonly CalendarContext _context;
+        private IRepository _repository;
 
-        public ProjectCardsController(CalendarContext context)
+        public ProjectCardsController(IRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: api/ProjectCards
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProjectCard>>> GetProjectCards()
         {
-            return await _context.ProjectCards.ToListAsync();
+            return Ok(await _repository.GetProjectCards());
         }
 
         // GET: api/ProjectCards/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProjectCard>> GetProjectCard(int id)
         {
-            var projectCard = await _context.ProjectCards.FindAsync(id);
-
-            if (projectCard == null)
-            {
-                return NotFound();
-            }
-
-            return projectCard;
-        }
-
-        // PUT: api/ProjectCards/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProjectCard(int id, ProjectCard projectCard)
-        {
-            if (id != projectCard.ID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(projectCard).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProjectCardExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return await _repository.GetProjectByID(id);
         }
 
         // POST: api/ProjectCards
@@ -80,31 +42,42 @@ namespace calendar.Controllers
         [HttpPost]
         public async Task<ActionResult<ProjectCard>> PostProjectCard(ProjectCard projectCard)
         {
-            _context.ProjectCards.Add(projectCard);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetProjectCard", new { id = projectCard.ID }, projectCard);
+            return await _repository.AddProject(projectCard);
         }
 
         // DELETE: api/ProjectCards/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<ProjectCard>> DeleteProjectCard(int id)
         {
-            var projectCard = await _context.ProjectCards.FindAsync(id);
-            if (projectCard == null)
-            {
-                return NotFound();
-            }
-
-            _context.ProjectCards.Remove(projectCard);
-            await _context.SaveChangesAsync();
-
-            return projectCard;
+            await _repository.DeleteProject(id);
+            return Ok();
         }
 
-        private bool ProjectCardExists(int id)
-        {
-            return _context.ProjectCards.Any(e => e.ID == id);
-        }
+
     }
 }
+
+/*
+
+        IEnumerable<ProjectCard> GetPromotedProjects();
+
+        IEnumerable<ProjectCard> GetNonPromotedProjects();
+
+        IEnumerable<ProjectCard> GetListedProjects();
+
+        IEnumerable<ProjectCard> GetUpcomingProjects();
+
+       void SetListed(int projectID);
+
+        void RemoveListed(int projectID);
+
+        void SetPromoted(int projectID);
+
+        void RemovePromoted(int projectID);
+
+        void UpdateProject(ProjectCard projectCard, int projectID);
+
+        void AddUser(User user);
+
+        Task DeleteUser(int userID);
+*/
